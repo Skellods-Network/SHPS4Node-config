@@ -1,0 +1,28 @@
+{  
+  "name":"SHPS4Node-Config",
+  "version":"1.0.0",
+  "description":"Config module of SHPS4Node",
+  "main":"index-config.js",
+  "homepage":"https://shps.io",
+  "author":{
+    "name":"Marco Alka",
+    "email":"me@marco-alka.de",
+    "url":"https://marco-alka.de"
+  },
+  "repository":{  
+    "type":"git",
+    "url":"https://github.com/Skellods-Network/SHPS4Node-config.git"
+  },
+  "engines":{  
+    "node":">=4.0.0",
+    "npm":">=2.5.0"
+  },
+  "dependencies":{  
+    "vasync":"^1.6.0",
+    "colors":">=0.6.0 < 2",
+    "q":"^1.2.0",
+    "node-mod-load":"^2.1.0",
+    "promise-defer":"^1.0.0",
+    "semver":"^5.1.0"
+  }
+}
