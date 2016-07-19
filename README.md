@@ -9,11 +9,13 @@ class Config {
     /**
      * Get setting from config file
      *
-     * @deprecated use getVHostConfig(), getDBConfig() or getMasterConfig() instead
+     * @deprecated
+     *   use getVHostConfig(), getDBConfig() or getMasterConfig() instead
+     *   scheduled for removal in v2.0.0
      * @param $group
      * @param $key
      * @param $domain
-     * @result void|string|int|boolean
+     * @return void|string|int|boolean
      */
     getHPConfig($group, $key, $domain) { throw 'Not implemented'; };
 
@@ -25,7 +27,7 @@ class Config {
      * @param $url string URL for which the config should be retrived
      * @param $section string OPTIONAL
      * @param $key string OPTIONAL
-     * @result mixed
+     * @return mixed
      */
     getVHostConfig($url, $section, $key) { throw 'Not implemented'; };
 
@@ -38,7 +40,7 @@ class Config {
      * @param $url string URL for which the config should be retrived
      * @param $alias string OPTIONAL
      * @param $key string OPTIONAL
-     * @result mixed
+     * @return mixed
      */
     getDBConfig($url, $alias, $key) { throw 'Not implemented'; };
 
@@ -47,7 +49,7 @@ class Config {
      * $key is optional. If no $key is set, all config options will be returned as an Object.
      *
      * @param $key string OPTIONAL
-     * @result mixed
+     * @return mixed
      */
     getMasterConfig($key) { throw 'Not implemented'; };
 
@@ -55,7 +57,7 @@ class Config {
      * Read all config files and store them
      *
      * @todo: if no config available: ask user to input config step-by-step and write config file
-     * @result
+     * @return
      *  Promise()
      */
     readConfig() { throw 'Not implemented'; };
@@ -63,9 +65,9 @@ class Config {
     /**
      * Get whole configuration of certain homepage
      * 
-     * @deprecated since v4.2.0, removal scheduled for v4.3.0
+     * @deprecated scheduled for removal in v2.0.0
      * @param string $uri
-     * @result array|null
+     * @return array|null
      */
     getConfig($uri) { throw 'Not implemented'; };
 };
