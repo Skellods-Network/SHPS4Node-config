@@ -1,9 +1,11 @@
 ﻿'use strict';
 
-var sym = require('../interface/config-symbols.h.js');
+var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //'../interface/config-symbols.h.js');
 
 
-require('../interface/config.h.js').prototype._init = function () {
+require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype._init = function ($libs) {
+
+    this._libs = $libs;
 
     this[sym.domains] = [];
 

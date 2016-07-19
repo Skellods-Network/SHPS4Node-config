@@ -9,7 +9,7 @@ var semver = require('semver');
 var q = require('q');
 var libs = require('node-mod-load').libs;
 
-var sym = require('../interface/config-symbols.h.js');
+var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
 
 var readDir = function (dir, type, task, regex) {
 
@@ -33,7 +33,7 @@ var readDir = function (dir, type, task, regex) {
 
             if (!regex.test(file)) {
 
-                libs.schedule.sendSignal('onFilePollution', dir, type, file);
+                this._libs.schedule.sendSignal('onFilePollution', dir, type, file);
                 continue;
             }
 
@@ -47,7 +47,7 @@ var readDir = function (dir, type, task, regex) {
             catch (err) {
 
                 task.interim(TASK_RESULT_ERROR, 'Could not open ' + type + ' ' + file);
-                libs.coml.writeError(err);
+                this._libs.coml.writeError(err);
                 continue;
             }
 
@@ -59,7 +59,7 @@ var readDir = function (dir, type, task, regex) {
             catch (err) {
 
                 task.interim(TASK_RESULT_ERROR, 'Could not read ' + type + ' ' + file);
-                libs.coml.writeError(err);
+                this._libs.coml.writeError(err);
                 continue;
             }
 
@@ -74,8 +74,8 @@ var readDir = function (dir, type, task, regex) {
 
 var readTemplates = function (co, cb) {
 
-    var dir = libs.main.getDir(SHPS_DIR_TEMPLATES);
-    readDir(dir, 'template', co.task, /\.json$/).then($files => {
+    var dir = this._libs.main.getDir(SHPS_DIR_TEMPLATES);
+    readDir.apply(this, [dir, 'template', co.task, /\.json$/]).then($files => {
 
         co.templates = $files;
         cb(null, co);
@@ -143,8 +143,8 @@ var evalTemplates = function (co, cb) {
 
 var readConfigs = function (co, cb) {
 
-    var dir = libs.main.getDir(SHPS_DIR_CONFIGS);
-    readDir(dir, 'config', co.task, /\.json$/).then($files => {
+    var dir = this._libs.main.getDir(SHPS_DIR_CONFIGS);
+    readDir.apply(this, [dir, 'config', co.task, /\.json$/]).then($files => {
 
         co.configs = $files;
         cb(null, co);
@@ -259,11 +259,11 @@ var evalConfigs = function (co, cb) {
     cb(null, co);
 };
 
-require('../interface/config.h.js').prototype.readConfig = function () {
+require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.readConfig = function () {
 
     var d = q.defer();
 
-    var task = libs.coml.newTask('Detecting Configurations');
+    var task = this._libs.coml.newTask('Detecting Configurations');
 
     async.waterfall([
 

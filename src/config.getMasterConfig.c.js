@@ -1,8 +1,8 @@
 ﻿'use strict';
 
-var sym = require('../interface/config-symbols.h.js');
+var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
 
-require('../interface/config.h.js').prototype.getMasterConfig = function ($key) {
+require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getMasterConfig = function ($key) {
 
     if (typeof $key === 'undefined') {
 

@@ -1,8 +1,8 @@
 ﻿'use strict';
 
-var sym = require('../interface/config-symbols.h.js');
+var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
 
-require('../interface/config.h.js').prototype.getDBConfig = function ($uri, $alias, $key) {
+require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getDBConfig = function ($uri, $alias, $key) {
 
     if (typeof $alias === 'undefined') {
 

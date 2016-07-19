@@ -2,7 +2,13 @@
 
 module.exports = class Config {
 
-    constructor() { this._init(); };
+    /**
+     * Constructor
+     *
+     * @param $libs Object
+     *   node-mod-load@2 Object for compatibility reasons
+     */
+    constructor($libs) { this._init($libs); };
 
     /**
      * Get setting from config file
