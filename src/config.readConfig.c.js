@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 var fs = require('fs');
 
@@ -184,6 +184,21 @@ var evalConfigs = function (co, cb) {
             i++;
         }
 
+        i = tKeys.length - 1;
+        while (i >= 0) {
+
+            if (typeof template[tKeys[i]] !== 'undefined'
+                && typeof template[tKeys[i]].default !== 'undefined'
+                && typeof template[tKeys[i]] !== 'undefined'
+                && typeof template[tKeys[i]].value === 'undefined'
+            ) {
+
+                template[tKeys[i]].value = template[tKeys[i]].default;
+            }
+
+            i--;
+        }
+        
         return template;
     };
 
