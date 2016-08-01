@@ -1,6 +1,6 @@
 {  
   "name":"SHPS4Node-Config",
-  "version":"1.0.1",
+  "version":"1.0.2",
   "description":"Config module of SHPS4Node",
   "main":"index-config.js",
   "homepage":"https://shps.io",
@@ -21,7 +21,7 @@
     "vasync":"^1.6.0",
     "colors":">=0.6.0 < 2",
     "q":"^1.2.0",
-    "node-mod-load":"^2.1.0",
+    "node-mod-load":"^3.0.0",
     "promise-defer":"^1.0.0",
     "semver":"^5.1.0"
   }
