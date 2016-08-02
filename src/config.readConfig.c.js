@@ -264,7 +264,15 @@ var evalConfigs = function (co, cb) {
 
             case 'vhost': {
 
-                this[sym.cfg.vhosts][c.generalConfig.URL.value] = matchTemplate(this[sym.template.vhost], c);
+                if (this[sym.cfg.vhosts][c.generalConfig.URL.value]) {
+
+                    Object.assign(this[sym.cfg.vhosts][c.generalConfig.URL.value], matchTemplate(this[sym.template.vhost], c));
+                }
+                else {
+
+                    this[sym.cfg.vhosts][c.generalConfig.URL.value] = matchTemplate(this[sym.template.vhost], c);
+                }
+                
                 co.task.interim(TASK_RESULT_OK, 'VHost config loaded: ' + f.toString().green);
                 break;
             }
