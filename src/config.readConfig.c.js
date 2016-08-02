@@ -170,11 +170,11 @@ var evalConfigs = function (co, cb) {
             }
             else if (cKeys[i] !== 'value' && typeof template[cKeys[i]] === 'undefined') {
 
-                this.task.interim(TASK_RESULT_WARNING, 'Config option not in template: ' + cKeys[i]);
+                co.task.interim(TASK_RESULT_WARNING, 'Config option not in template: ' + cKeys[i]);
             }
             else if (cKeys[i] !== 'value' && typeof template[cKeys[i]] !== typeof config[cKeys[i]]) {
 
-                this.task.interim(TASK_RESULT_ERROR, 'Config option type deviates from template option type: ' + cKeys[i]);
+                co.task.interim(TASK_RESULT_ERROR, 'Config option type deviates from template option type: ' + cKeys[i]);
             }
             else {
 
