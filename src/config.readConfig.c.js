@@ -153,8 +153,9 @@ var readConfigs = function (co, cb) {
 
 var evalConfigs = function (co, cb) {
 
-    var matchTemplate = (template, config) => {
+    var matchTemplate = ($template, config) => {
 
+        var template = Object.assign({}, $template);
         var tKeys = Object.keys(template);
         var cKeys = Object.keys(config);
         var i = 0;
