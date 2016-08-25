@@ -1,6 +1,6 @@
 {  
   "name":"SHPS4Node-Config",
-  "version":"1.0.3",
+  "version":"1.0.4",
   "description":"Config module of SHPS4Node",
   "main":"index-config.js",
   "homepage":"https://shps.io",
