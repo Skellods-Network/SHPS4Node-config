@@ -153,7 +153,7 @@ var readConfigs = function (co, cb) {
 
 var evalConfigs = function (co, cb) {
 
-    var matchTemplate = ($template, config) => {
+    var matchTemplate = ($template, config, $parentPath) => {
 
         var template = Object.assign({}, $template);
         var tKeys = Object.keys(template);
@@ -166,12 +166,24 @@ var evalConfigs = function (co, cb) {
 
                 if (['_info', 'configHeader'].indexOf(cKeys[i]) < 0 && typeof template[cKeys[i]] !== 'undefined') {
 
-                    template[cKeys[i]] = matchTemplate(template[cKeys[i]], config[cKeys[i]]);
+                    var parentPath = cKeys[i];
+                    if ($parentPath) {
+                        
+                        parentPath = $parentPath + '->' + parentPath;
+                    }
+                    
+                    template[cKeys[i]] = matchTemplate(template[cKeys[i]], config[cKeys[i]], parentPath);
                 }
             }
             else if (cKeys[i] !== 'value' && typeof template[cKeys[i]] === 'undefined') {
 
-                co.task.interim(TASK_RESULT_WARNING, 'Config option not in template: ' + cKeys[i]);
+                var optionName = cKeys[i];
+                if ($parentPath) {
+                    
+                    optionName = $parentPath + '->' + cKeys[i];
+                }
+            
+                co.task.interim(TASK_RESULT_WARNING, 'Config option not in template: ' + optionName);
             }
             else if (cKeys[i] !== 'value' && typeof template[cKeys[i]] !== typeof config[cKeys[i]]) {
 
