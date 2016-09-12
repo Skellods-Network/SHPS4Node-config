@@ -11,6 +11,33 @@ module.exports = class Config {
     constructor($libs) { this._init($libs); };
 
     /**
+     * Generate a config file from a template
+     *
+     * @param $type string
+     * @param $fileName string
+     * @param $onValue callable(SettingsObject)->value|Promise
+     *   The first parameter of the callable will receive an object which contains all information about the setting
+     *   available in the template, for example
+     *   {
+     *     default: "localhost",
+     *     description: "XXXX",
+     *     examples: [
+     *       "localhost",
+     *       "node.example.com",
+     *     ],
+     *     group: "generalConfig",
+     *     key: "URL",
+     *     type: "string",
+     *   }
+     *
+     *   The resolver will have one parameter, which contains the final function name
+     *   The rejector will have one parameter, which contains an Error Object
+     * @param $offsetGroup integer
+     * @param $offsetSetting integer
+     */
+    genConfig($type, $fileName, $onValue, $offsetGroup, $offsetSetting) { throw 'Not implemented: genConfig'; };
+
+    /**
      * Get setting from config file
      *
      * @deprecated use getVHostConfig(), getDBConfig() or getMasterConfig() instead
