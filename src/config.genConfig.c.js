@@ -158,7 +158,7 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
                 try {
 
-                    addValue($setting, $setting.group, $setting.key, $value);
+                    addValue($setting, $setting.group, $setting.key, $v);
                 }
                 catch ($e) {
 
