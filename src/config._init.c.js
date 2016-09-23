@@ -8,6 +8,7 @@ require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype._init = 
     this._libs = $libs;
 
     this[sym.domains] = [];
+    this[sym.templates] = [];
 
     this[sym.cfg.master] = {};
     this[sym.cfg.vhosts] = {};

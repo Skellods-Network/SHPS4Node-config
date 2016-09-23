@@ -102,6 +102,8 @@ var evalTemplates = function (co, cb) {
         //TODO check template version
         //TODO check config version
 
+        this[sym.templates][t.template._info.type] = t.template;
+
         switch (t.template._info.type) {
 
             case 'master': {

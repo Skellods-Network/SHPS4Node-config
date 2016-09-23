@@ -83,6 +83,14 @@ module.exports = class Config {
     getMasterConfig($key) { throw 'Not implemented'; };
 
     /**
+     * Get a certain template by type
+     *
+     * @throws when template not available
+     * @param $type string Name of template type
+     */
+    getTemplate($type) { throw 'Not implemented: getTemplate!'; };
+
+    /**
      * Read all config files and store them
      *
      * @todo: if no config available: ask user to input config step-by-step and write config file

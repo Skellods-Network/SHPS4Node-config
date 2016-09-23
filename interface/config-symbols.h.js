@@ -6,6 +6,7 @@ me.template = {};
 me.cfg = {};
 
 me.domains = Symbol();
+me.templates = Symbol();
 
 me.cfg.master = Symbol();
 me.cfg.vhosts = Symbol();
