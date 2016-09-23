@@ -6,13 +6,19 @@ require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getDBCon
 
     if (typeof $alias === 'undefined') {
 
-        return this[sym.cfg.vhosts][$uri].databaseConfig;
+        return this[sym.cfg.vhosts][$uri]
+            ? this[sym.cfg.vhosts][$uri].databaseConfig
+            : undefined;
     }
     
     if (typeof $key === 'undefined') {
 
-        return this[sym.cfg.vhosts][$uri].databaseConfig[$alias];
+        return this[sym.cfg.vhosts][$uri] && this[sym.cfg.vhosts][$uri].databaseConfig
+            ? this[sym.cfg.vhosts][$uri].databaseConfig[$alias]
+            : undefined;
     }
 
-    return this[sym.cfg.vhosts][$uri].databaseConfig[$alias][$key];
+    return this[sym.cfg.vhosts][$uri] && this[sym.cfg.vhosts][$uri].databaseConfig && this[sym.cfg.vhosts][$uri].databaseConfig[$alias]
+        ? this[sym.cfg.vhosts][$uri].databaseConfig[$alias][$key]
+        : undefined;
 };
