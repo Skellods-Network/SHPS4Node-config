@@ -102,8 +102,6 @@ var evalTemplates = function (co, cb) {
         //TODO check template version
         //TODO check config version
 
-        this[sym.templates][t.template._info.type] = t.template;
-
         switch (t.template._info.type) {
 
             case 'master': {
@@ -129,6 +127,12 @@ var evalTemplates = function (co, cb) {
                 tCheck += 0b001;
                 co.task.interim(TASK_RESULT_OK, 'VHost template loaded: ' + f.toString().green);
                 break;
+            }
+
+            default: {
+
+                this[sym.templates][t.template._info.type] = t.template;
+                co.task.interim(TASK_RESULT_OK, 'Unknown template loaded: ' + f.toString().green);
             }
         }
     }
