@@ -29,7 +29,7 @@ var getSettings = function* ($type, $offsetGroup, $offsetSetting) {
     var offSet = $offsetSetting;
     while (i < l) {
 
-        if (confGroups[i] === '_info') {
+        if (confGroups[i] === '_info' || ['database', 'master'].indexOf($type) >= 0) {
 
             r = template[confGroups[i]];
             r.group = confGroups[i];
@@ -74,7 +74,7 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
     const setting = getSettings.apply(this, [$type, $offsetGroup, $offsetSetting]);
 
-    var addValue = ($setting, $group, $key, $value) => {
+    const addValue = ($setting, $group, $key, $value) => {
 
         if ($setting.type === 'integer') {
 
@@ -83,7 +83,14 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
         if (typeof $value !== $setting.type) {
 
-            throw new Error(`The value \`${$value}\` for ${$group}::${$key} is not of type ${$setting.type}`);
+            if (!$key) {
+
+                throw new Error(`The value \`${$value}\` for ${$group} is not of type ${$setting.type}`);
+            }
+            else {
+
+                throw new Error(`The value \`${$value}\` for ${$group}::${$key} is not of type ${$setting.type}`);
+            }
         }
 
         if (!conf[$group]) {
@@ -91,16 +98,26 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
             conf[$group] = {};
         }
 
-        conf[$group][$key] = $setting;
-        conf[$group][$key].value = $value;
+        if ($key) {
+            conf[$group][$key] = $setting;
+            conf[$group][$key].value = $value;
 
-        // Strip everything we do not need
-        delete conf[$group][$key].reference;
-        delete conf[$group][$key].group;
-        delete conf[$group][$key].key;
+            // Strip everything we do not need
+            delete conf[$group][$key].reference;
+            delete conf[$group][$key].group;
+            delete conf[$group][$key].key;
+        }
+        else {
+            conf[$group] = $setting;
+            conf[$group].value = $value;
+
+            // Strip everything we do not need
+            delete conf[$group].reference;
+            delete conf[$group].group;
+        }
     };
 
-    var writeFile = ($conf) => {
+    const writeFile = ($conf) => {
 
         var fn = $fileName;
         if (path.extname(fn) !== '.json') {
@@ -123,17 +140,31 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
         });
     };
 
-    var processSetting = $setting => {
+    const processSetting = $setting => {
 
         if ($setting.group === '_info') {
 
-            const s = $setting;
-            delete s.group;
-            conf.configHeader = s;
+            //TODO: Make this more generic
+            if ($type === 'database') {
 
-            return {
+                const s = $setting;
+                s.group = 'configHeader';
+                s.description = 'The domain of VHost which should be able to use this DB config';
+                s.default = 'localhost';
+                s.type = 'string';
 
-                skip: true,
+                return $onValue(s);
+            }
+            else {
+
+                const s = $setting;
+                delete s.group;
+                conf.configHeader = s;
+
+                return {
+
+                    skip: true,
+                }
             }
         }
         else {
@@ -142,7 +173,20 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
         }
     };
 
-    var processValue = ($setting, $value) => {
+    const postProcess = () => {
+
+        if ($type !== 'database') {
+
+            return;
+        }
+
+        conf.configHeader.vhost = conf.configHeader.value;
+        delete conf.configHeader.value;
+        conf.configHeader.type = 'database';
+        delete conf.configHeader.default;
+    };
+
+    const processValue = ($setting, $value) => {
 
         //TODO: implement dependency parser for config-dependencies
 
@@ -168,10 +212,19 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
                 if (s) {
 
-                    process.nextTick(processValue.bind(this, s, $onValue(s)));
+                    if (s.group == '_info') {
+
+                        s.skip = true;
+                        process.nextTick(processValue.bind(this, 'configHeader', s));
+                    }
+                    else {
+
+                        process.nextTick(processValue.bind(this, s, $onValue(s)));
+                    }
                 }
                 else {
 
+                    postProcess();
                     writeFile(conf);
                 }
             }, d.reject);
@@ -197,12 +250,13 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
             }
             else {
 
+                postProcess();
                 writeFile(conf);
             }
         }
     };
 
-    var s = setting.next().value;
+    const s = setting.next().value;
     processValue(s, processSetting(s));
 
     return d.promise;
