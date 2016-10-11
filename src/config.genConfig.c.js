@@ -159,7 +159,7 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
                 const s = $setting;
                 delete s.group;
-                conf.configHeader = s;
+                conf.configHeader = s;debugger;
 
                 return {
 
@@ -212,10 +212,10 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
                 if (s) {
 
-                    if (s.group == '_info') {
+                    if (s.group === '_info') {
 
                         s.skip = true;
-                        process.nextTick(processValue.bind(this, 'configHeader', s));
+                        process.nextTick(processValue.bind(this, '_info', s));
                     }
                     else {
 
@@ -242,6 +242,10 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
                     d.reject($e);
                     return;
                 }
+            }
+            else if ($setting === '_info') {
+
+                conf.configHeader = $value;
             }
 
             if (s) {
