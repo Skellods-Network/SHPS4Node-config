@@ -159,7 +159,7 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
                 const s = $setting;
                 delete s.group;
-                conf.configHeader = s;debugger;
+                conf.configHeader = s;
 
                 return {
 
