@@ -1,36 +1,43 @@
 ﻿'use strict';
 
-var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
+const nml = require('node-mod-load')('SHPS4Node-config');
 
-require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getHPConfig = function ($group, $key, $domain) {
+const sym = nml.libs['config-symbols.h'];
+
+
+nml.libs['config.h'].prototype.getHPConfig = function ($group, $key, $domain) {
+
+    let cv = this[sym.cfg.vhosts].get($domain);
 
     if (typeof $domain !== 'undefined' &&
-        typeof this[sym.cfg.vhosts][$domain] !== 'undefined' &&
-        typeof this[sym.cfg.vhosts][$domain][$group] !== 'undefined' &&
-        typeof this[sym.cfg.vhosts][$domain][$group][$key] !== 'undefined') {
+        typeof cv !== 'undefined' &&
+        typeof cv[$group] !== 'undefined' &&
+        typeof cv[$group][$key] !== 'undefined') {
 
-        return this[sym.cfg.vhosts][$domain][$group][$key].value;
+        return cv[$group][$key].value;
     }
 
-    if (typeof this[sym.cfg.master][$group] !== 'undefined') {
+    let cm = this[sym.cfg.master][$group];
+
+    if (typeof cm !== 'undefined') {
 
         if (typeof $key !== 'undefined' &&
-            (typeof this[sym.cfg.master][$group] !== 'undefined' && typeof this[sym.cfg.master][$group][$key] !== 'undefined')) {
+            (typeof cm !== 'undefined' && typeof cm[$key] !== 'undefined')) {
 
-            return this[sym.cfg.master][$group][$key].value || this[sym.cfg.master][$group][$key].default;
+            return cm[$key].value || cm[$key].default;
         }
     }
     else if ($group === 'config') {
 
-        return typeof this[sym.cfg.master][$key].value !== 'undefined' ? this[sym.cfg.master][$key].value : this[sym.cfg.master][$key].default;
+        let cmk = this[sym.cfg.master][$key];
+        return typeof cmk.value !== 'undefined' ? cmk.value : cmk.default;
     }
     else {
 
-        if (typeof this[sym.cfg.master]['config'] !== 'undefined' && typeof this[sym.cfg.master]['config'][$group] !== 'undefined') {
+        let cmc = this[sym.cfg.master]['config'];
+        if (typeof cmc !== 'undefined' && typeof cmc[$group] !== 'undefined') {
 
-            return typeof this[sym.cfg.master]['config'][$group].value !== 'undefined' ? this[sym.cfg.master]['config'][$group].value : this[sym.cfg.master]['config'][$group].default;
+            return typeof cmc[$group].value !== 'undefined' ? cmc[$group].value : cmc[$group].default;
         }
     }
-
-    return;
 };

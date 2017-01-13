@@ -1,19 +1,20 @@
 'use strict';
 
-var fs = require('fs');
+const fs = require('fs');
 
-var async = require('vasync');
-var colors = require('colors');
-var defer = require('promise-defer');
-var semver = require('semver');
-var q = require('q');
-var libs = require('node-mod-load').libs;
+const async = require('vasync');
+const colors = require('colors');
+const defer = require('promise-defer');
+const semver = require('semver');
+const q = require('q');
+const nml = require('node-mod-load')('SHPS4Node-config');
 
-var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
+const sym = nml.libs['config-symbols.h'];
 
-var readDir = function (dir, type, task, regex) {
 
-    var d = defer();
+const readDir = function (dir, type, task, regex) {
+
+    const d = defer();
 
     fs.readdir(dir, ($err, $files) => {
 
@@ -23,9 +24,9 @@ var readDir = function (dir, type, task, regex) {
             return;
         }
 
-        var i = 0;
-        var l = $files.length;
-        var files = {};
+        let i = 0;
+        const l = $files.length;
+        const files = {};
         while (i < l) {
 
             let file = $files[i];
@@ -72,9 +73,9 @@ var readDir = function (dir, type, task, regex) {
     return d.promise;
 };
 
-var readTemplates = function (co, cb) {
+const readTemplates = function (co, cb) {
 
-    var dir = this._libs.main.getDir(SHPS_DIR_TEMPLATES);
+    const dir = this._libs.main.getDir(SHPS_DIR_TEMPLATES);
     readDir.apply(this, [dir, 'template', co.task, /\.json$/]).then($files => {
 
         co.templates = $files;
@@ -82,12 +83,12 @@ var readTemplates = function (co, cb) {
     }, cb);
 };
 
-var evalTemplates = function (co, cb) {
+const evalTemplates = function (co, cb) {
 
-    var i = 0;
-    var keys = Object.keys(co.templates);
-    var l = keys.length;
-    var tCheck = 0b000;
+    let i = 0;
+    const keys = Object.keys(co.templates);
+    const l = keys.length;
+    let tCheck = 0b000;
     while (i < l) {
 
         let f = keys[i];
@@ -131,7 +132,7 @@ var evalTemplates = function (co, cb) {
 
             default: {
 
-                this[sym.templates][t.template._info.type] = t.template;
+                this[sym.templates].set(t.template._info.type, t.template);
                 co.task.interim(TASK_RESULT_OK, 'Unknown template loaded: ' + f.toString().green);
             }
         }
@@ -147,9 +148,9 @@ var evalTemplates = function (co, cb) {
     }
 };
 
-var readConfigs = function (co, cb) {
+const readConfigs = function (co, cb) {
 
-    var dir = this._libs.main.getDir(SHPS_DIR_CONFIGS);
+    const dir = this._libs.main.getDir(SHPS_DIR_CONFIGS);
     readDir.apply(this, [dir, 'config', co.task, /\.json$/]).then($files => {
 
         co.configs = $files;
@@ -157,22 +158,22 @@ var readConfigs = function (co, cb) {
     }, cb);
 };
 
-var evalConfigs = function (co, cb) {
+const evalConfigs = function (co, cb) {
 
-    var matchTemplate = ($template, config, $parentPath) => {
+    const matchTemplate = ($template, config, $parentPath) => {
 
-        var template = Object.assign({}, $template);
-        var tKeys = Object.keys(template);
-        var cKeys = Object.keys(config);
-        var i = 0;
-        var l = cKeys.length;
+        const template = Object.assign({}, $template);
+        const tKeys = Object.keys(template);
+        const cKeys = Object.keys(config);
+        let i = 0;
+        const l = cKeys.length;
         while (i < l) {
 
             if (config[cKeys[i]] instanceof Object) {
 
                 if (['_info', 'configHeader'].indexOf(cKeys[i]) < 0 && typeof template[cKeys[i]] !== 'undefined') {
 
-                    var parentPath = cKeys[i];
+                    let parentPath = cKeys[i];
                     if ($parentPath) {
                         
                         parentPath = $parentPath + '->' + parentPath;
@@ -183,7 +184,7 @@ var evalConfigs = function (co, cb) {
             }
             else if (cKeys[i] !== 'value' && typeof template[cKeys[i]] === 'undefined') {
 
-                var optionName = cKeys[i];
+                let optionName = cKeys[i];
                 if ($parentPath) {
                     
                     optionName = $parentPath + '->' + cKeys[i];
@@ -221,9 +222,9 @@ var evalConfigs = function (co, cb) {
         return template;
     };
 
-    var i = 0;
-    var keys = Object.keys(co.configs);
-    var l = keys.length;
+    let i = 0;
+    const keys = Object.keys(co.configs);
+    const l = keys.length;
     while (i < l) {
 
         let f = keys[i];
@@ -257,24 +258,27 @@ var evalConfigs = function (co, cb) {
 
                 //TODO: use one database config for several vhosts
 
-                if (typeof this[sym.cfg.vhosts][c.configHeader.vhost] === 'undefined') {
+                let cfg = this[sym.cfg.vhosts].get(c.configHeader.vhost);
 
-                    this[sym.cfg.vhosts][c.configHeader.vhost] = {};
+                if (typeof cfg === 'undefined') {
+
+                    cfg.set(c.configHeader.vhost, {});
+                    cfg = this[sym.cfg.vhosts].get(c.configHeader.vhost);
                 }
 
-                if (typeof this[sym.cfg.vhosts][c.configHeader.vhost].databaseConfig === 'undefined') {
+                if (typeof cfg.databaseConfig === 'undefined') {
 
-                    this[sym.cfg.vhosts][c.configHeader.vhost].databaseConfig = {};
+                    cfg.databaseConfig = {};
                 }
 
-                this[sym.cfg.vhosts][c.configHeader.vhost].databaseConfig[c.alias.value] = matchTemplate(this[sym.template.database], c);
+                cfg.databaseConfig[c.alias.value] = matchTemplate(this[sym.template.database], c);
                 co.task.interim(TASK_RESULT_OK, 'Database config loaded: ' + (c.configHeader.vhost + '::' + c.alias.value).green);
                 break;
             }
 
             case 'hp': {
 
-                this[sym.cfg.vhosts][c.generalConfig.URL.value] = c;
+                this[sym.cfg.vhosts].set(c.generalConfig.URL.value, c);
                 co.task.interim(TASK_RESULT_WARNING, 'This config file uses a deprecated format: ' + f.toString().yellow.bold);
                 co.task.interim(TASK_RESULT_OK, 'Config loaded: ' + f.toString().green);
                 co.warnings++;
@@ -283,19 +287,17 @@ var evalConfigs = function (co, cb) {
 
             case 'vhost': {
 
-                var url = c.generalConfig.URL.value;
-                if (!url) {
+                const url = c.generalConfig.URL.value || c.generalConfig.URL.default;
 
-                    url = c.generalConfig.URL.default;
-                }
+                const cfg = this[sym.cfg.vhosts].get(url);
 
-                if (this[sym.cfg.vhosts][url]) {
+                if (cfg) {
 
-                    Object.assign(this[sym.cfg.vhosts][url], matchTemplate(this[sym.template.vhost], c));
+                    Object.assign(url, matchTemplate(this[sym.template.vhost], c));
                 }
                 else {
 
-                    this[sym.cfg.vhosts][url] = matchTemplate(this[sym.template.vhost], c);
+                    this[sym.cfg.vhosts].set(url, matchTemplate(this[sym.template.vhost], c));
                 }
                 
                 co.task.interim(TASK_RESULT_OK, 'VHost config loaded: ' + f.toString().green);
@@ -307,11 +309,11 @@ var evalConfigs = function (co, cb) {
     cb(null, co);
 };
 
-require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.readConfig = function () {
+nml.libs['config.h'].prototype.readConfig = function () {
 
-    var d = q.defer();
+    const d = q.defer();
 
-    var task = this._libs.coml.newTask('Detecting Configurations');
+    const task = this._libs.coml.newTask('Detecting Configurations');
 
     async.waterfall([
 

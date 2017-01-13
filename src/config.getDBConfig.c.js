@@ -1,24 +1,27 @@
 ﻿'use strict';
 
-var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
+const nml = require('node-mod-load')('SHPS4Node-config');
+const sym = nml.libs['config-symbols.h'];
 
-require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getDBConfig = function ($uri, $alias, $key) {
+nml.libs['config.h'].prototype.getDBConfig = function ($uri, $alias, $key) {
 
+    let c = this[sym.cfg.vhosts].get($uri.toString());
     if (typeof $alias === 'undefined') {
 
-        return this[sym.cfg.vhosts][$uri]
-            ? this[sym.cfg.vhosts][$uri].databaseConfig
+        return c
+            ? c.databaseConfig
             : undefined;
     }
     
     if (typeof $key === 'undefined') {
 
-        return this[sym.cfg.vhosts][$uri] && this[sym.cfg.vhosts][$uri].databaseConfig
-            ? this[sym.cfg.vhosts][$uri].databaseConfig[$alias]
+        return c && c.databaseConfig
+            ? c.databaseConfig[$alias.toString()]
             : undefined;
     }
 
-    return this[sym.cfg.vhosts][$uri] && this[sym.cfg.vhosts][$uri].databaseConfig && this[sym.cfg.vhosts][$uri].databaseConfig[$alias]
-        ? this[sym.cfg.vhosts][$uri].databaseConfig[$alias][$key]
+
+    return c && c.databaseConfig && c.databaseConfig[$alias.toString()]
+        ? c.databaseConfig[$alias.toString()][$key.toString()]
         : undefined;
 };

@@ -1,15 +1,34 @@
 'use strict';
 
-var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h'];
+const nml = require('node-mod-load')('SHPS4Node-config');
 
-require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getTemplate = function ($type) {
+const sym = nml.libs['config-symbols.h'];
 
-    var templates = Object.assign({}, this[sym.template], this[sym.templates])
+nml.libs['config.h'].prototype.getTemplate = function ($type) {
 
-    if (!templates[$type]) {
+    const t = {};
+    for (let entry of this[sym.templates]) {
 
-        throw new Error(`Template of type "${$type}" not available!`);
+        t[entry[0]] = entry[1];
     }
 
-    return templates[$type];
+    const templates = Object.assign({}, this[sym.template], t);
+
+    if (!templates[$type.toString()]) {
+
+        throw new Error(`Template of type "${$type.toString()}" not available!`);
+    }
+
+    if (templates[$type.toString()] instanceof Map) {
+
+        let r = {};
+        for (let entry of templates[$type.toString()]) {
+
+            r[entry[0]] = entry[1];
+        }
+
+        return r;
+    }
+
+    return templates[$type.toString()];
 };

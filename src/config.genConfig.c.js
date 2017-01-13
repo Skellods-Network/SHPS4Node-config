@@ -1,17 +1,17 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-var libs = require('node-mod-load')('SHPS4Node-config').libs;
-var defer = require('promise-defer');
+const libs = require('node-mod-load')('SHPS4Node-config').libs;
+const defer = require('promise-defer');
 
 
-var sym = libs['config-symbols.h'];
+const sym = libs['config-symbols.h'];
 
-//TODO: maybe carve out the template reader so that it can be re-used for the "template -> DB" part?
 
-var getSettings = function* ($type, $offsetGroup, $offsetSetting) {
+
+const getSettings = function* ($type, $offsetGroup, $offsetSetting) {
 
     const template = this[sym.template[$type]];
     if (!template) {
@@ -20,13 +20,13 @@ var getSettings = function* ($type, $offsetGroup, $offsetSetting) {
     }
 
     const confGroups = Object.keys(template);
-    var i = $offsetGroup || 0;
+    let i = $offsetGroup || 0;
     const l = confGroups.length;
-    var settings;
-    var j;
-    var sl;
-    var r;
-    var offSet = $offsetSetting;
+    let settings;
+    let j;
+    let sl;
+    let r;
+    let offSet = $offsetSetting;
     while (i < l) {
 
         if (confGroups[i] === '_info' || ['database', 'master'].indexOf($type) >= 0) {
@@ -119,7 +119,7 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
     const writeFile = ($conf) => {
 
-        var fn = $fileName;
+        let fn = $fileName;
         if (path.extname(fn) !== '.json') {
 
             fn += '.json';
@@ -190,7 +190,7 @@ libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $off
 
         //TODO: implement dependency parser for config-dependencies
 
-        var s = setting.next();
+        let s = setting.next();
         if (s) {
 
             s = s.value;

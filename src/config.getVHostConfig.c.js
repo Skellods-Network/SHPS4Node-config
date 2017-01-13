@@ -1,18 +1,23 @@
 ﻿'use strict';
 
-var sym = require('node-mod-load')('SHPS4Node-config').libs['config-symbols.h']; //('../interface/config-symbols.h.js');
+const nml = require('node-mod-load')('SHPS4Node-config');
 
-require('node-mod-load')('SHPS4Node-config').libs['config.h'].prototype.getVHostConfig = function ($uri, $section, $key) {
+const sym = nml.libs['config-symbols.h'];
+
+
+nml.libs['config.h'].prototype.getVHostConfig = function ($uri, $section, $key) {
+
+    let c = this[sym.cfg.vhosts].get($uri.toString());
 
     if (typeof $section === 'undefined') {
 
-        return this[sym.cfg.vhosts][$uri];
+        return c;
     }
 
     if (typeof $key === 'undefined') {
 
-        return this[sym.cfg.vhosts][$uri][$section][$alias];
+        return c[$section.toString()];
     }
 
-    return this[sym.cfg.vhosts][$uri][$section][$alias][$key];
+    return c[$section.toString()][$key.toString()];
 };
