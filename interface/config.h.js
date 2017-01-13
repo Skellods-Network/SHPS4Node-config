@@ -107,4 +107,11 @@ module.exports = class Config {
      * @result array|null
      */
     getConfig($uri) { throw 'Not implemented'; };
+
+    /**
+     * Get all vHost hostnames configured
+     *
+     * @return {Array.<string>}
+     */
+    getHostnames() { throw 'Not implemented: getHostnames!'; };
 };
