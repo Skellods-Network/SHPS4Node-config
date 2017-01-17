@@ -262,7 +262,7 @@ const evalConfigs = function (co, cb) {
 
                 if (typeof cfg === 'undefined') {
 
-                    cfg.set(c.configHeader.vhost, {});
+                    this[sym.cfg.vhosts].set(c.configHeader.vhost, {});
                     cfg = this[sym.cfg.vhosts].get(c.configHeader.vhost);
                 }
 
@@ -293,7 +293,7 @@ const evalConfigs = function (co, cb) {
 
                 if (cfg) {
 
-                    Object.assign(url, matchTemplate(this[sym.template.vhost], c));
+                    Object.assign(cfg, matchTemplate(this[sym.template.vhost], c));
                 }
                 else {
 
