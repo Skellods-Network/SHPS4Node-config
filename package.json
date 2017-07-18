@@ -17,12 +17,12 @@
     "node":">=4.0.0",
     "npm":">=2.5.0"
   },
-  "dependencies":{  
+  "dependencies":{
     "vasync":"^1.6.0",
-    "colors":">=0.6.0 < 2",
-    "q":"^1.2.0",
-    "node-mod-load":"^3.0.0",
+    "node-mod-load":"^3.2.0",
     "promise-defer":"^1.0.0",
-    "semver":"^5.1.0"
+    "semver":"^5.1.0",
+    "mics": "^0.7.0",
+    "rustify-js": "^0.1.1"
   }
 }

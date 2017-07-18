@@ -1,21 +1,24 @@
 ﻿'use strict';
 
-module.exports = class Config {
+const mix = require('mics').mix;
+const nml = require('node-mod-load');
+
+const meth = nml('SHPS4Node-plugin').libs.meth;
+const mixins = nml('SHPS4Node').libs.main.mixins;
+
+module.exports = mix(mixins.base, mixins.init, superclass => class Config extends superclass {
 
     /**
      * Constructor
-     *
-     * @param $libs Object
-     *   node-mod-load@2 Object for compatibility reasons
      */
-    constructor($libs) { this._init($libs); };
+    constructor() { super(); meth._init.call(this); };
 
     /**
      * Generate a config file from a template
      *
-     * @param $type string
-     * @param $fileName string
-     * @param $onValue callable(SettingsObject)->value|Promise
+     * @param {string} $type
+     * @param {string} $fileName
+     * @param {function} $onValue callable(SettingsObject)->value|Promise
      *   The first parameter of the callable will receive an object which contains all information about the setting
      *   available in the template, for example
      *   {
@@ -32,86 +35,55 @@ module.exports = class Config {
      *
      *   The resolver will have one parameter, which contains the final function name
      *   The rejector will have one parameter, which contains an Error Object
-     * @param $offsetGroup integer
-     * @param $offsetSetting integer
+     * @param {number} $offsetGroup OPTIONAL
+     * @param {number} $offsetSetting OPTIONAL
      */
-    genConfig($type, $fileName, $onValue, $offsetGroup, $offsetSetting) { throw 'Not implemented: genConfig'; };
+    genConfig($type, $fileName, $onValue, $offsetGroup = 0, $offsetSetting = 0)
+        { throw new Error('Not implemented: Config.genConfig'); };
 
     /**
-     * Get setting from config file
+     * Get whole configuration by name
      *
-     * @deprecated use getVHostConfig(), getDBConfig() or getMasterConfig() instead
-     * @param $group
-     * @param $key
-     * @param $domain
-     * @result void|string|int|boolean
+     * @param {string} $name
+     * @result {object} without header
      */
-    getHPConfig($group, $key, $domain) { throw 'Not implemented'; };
+    getConfig($name) { throw new Error('Not implemented: Config.getConfig'); };
 
     /**
-     * Get settings from config file
-     * $section and $key are optional. If no $key is set, all config options will be returned as an Object.
-     * If additionally $section is not set either, all sections will be returned as a map with maps of their respective keys as values
+     * Get the names of all loaded configs
      *
-     * @param $url string URL for which the config should be retrived
-     * @param $section string OPTIONAL
-     * @param $key string OPTIONAL
-     * @result mixed
+     * @return {Array<string>}
      */
-    getVHostConfig($url, $section, $key) { throw 'Not implemented'; };
+    getConfigNames() { throw new Error('Not implemented: Config.getConfigNames'); };
 
     /**
-     * Get settings from config file
-     * $alias and $key are optional. If no $key is set, all config options will be returned as an Object.
-     * If additionally $alias is not set either, all databases will be returned as a map with maps of their respective keys as values
-     * Each vhost will have at least the aliases default, logging, usermanagemet
-     *
-     * @param $url string URL for which the config should be retrived
-     * @param $alias string OPTIONAL
-     * @param $key string OPTIONAL
-     * @result mixed
-     */
-    getDBConfig($url, $alias, $key) { throw 'Not implemented'; };
-
-    /**
-     * Get settings from config file
-     * $key is optional. If no $key is set, all config options will be returned as an Object.
-     *
-     * @param $key string OPTIONAL
-     * @result mixed
-     */
-    getMasterConfig($key) { throw 'Not implemented'; };
-
-    /**
-     * Get a certain template by type
+     * Get a certain template by name
      *
      * @throws when template not available
-     * @param $type string Name of template type
+     * @param $name string Name of template type
+     * @return {object}
      */
-    getTemplate($type) { throw 'Not implemented: getTemplate!'; };
+    getTemplate($name) { throw new Error('Not implemented: Config.getTemplate!'); };
 
     /**
-     * Read all config files and store them
+     * Get the names of all loaded templates
      *
-     * @todo: if no config available: ask user to input config step-by-step and write config file
-     * @result
-     *  Promise()
+     * @return {Array<string>}
      */
-    readConfig() { throw 'Not implemented'; };
+    getTemplateNames() { throw new Error('Not implemented: Config.getTemplateNames!'); };
 
     /**
-     * Get whole configuration of certain homepage
-     * 
-     * @deprecated since v4.2.0, removal scheduled for v4.3.0
-     * @param string $uri
-     * @result array|null
-     */
-    getConfig($uri) { throw 'Not implemented'; };
-
-    /**
-     * Get all vHost hostnames configured
+     * Drop all loaded configs and read all config files at a path
      *
-     * @return {Array.<string>}
+     * @param {string} $path
+     * @result {Promise}
      */
-    getHostnames() { throw 'Not implemented: getHostnames!'; };
-};
+    loadConfigs($path) { throw new Error('Not implemented: Config.loadConfigs'); };
+
+    /**
+     * Drop all loaded templates and read all template files at a path
+     *
+     * @param {string} $path
+     */
+    loadTemplates($path) { throw new Error('Not implemented: Config.loadTemplates'); };
+});
