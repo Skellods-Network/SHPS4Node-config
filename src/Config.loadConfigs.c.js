@@ -2,11 +2,8 @@
 
 const fs = require('fs');
 
-const async = require('vasync');
-const colors = require('colors');
 const defer = require('promise-defer');
 const semver = require('semver');
-const q = require('q');
 const nml = require('node-mod-load')('SHPS4Node-config');
 
 const libs = nml.libs;
