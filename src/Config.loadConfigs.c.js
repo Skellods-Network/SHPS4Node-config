@@ -9,6 +9,7 @@ const semver = require('semver');
 const q = require('q');
 const nml = require('node-mod-load')('SHPS4Node-config');
 
+const libs = nml.libs;
 const sym = nml.libs['config-symbols.h'];
 
 
@@ -309,7 +310,7 @@ const evalConfigs = function (co, cb) {
     cb(null, co);
 };
 
-nml.libs['config.h'].prototype.readConfig = function () {
+libs.meth.readConfig = function () {
 
     const d = q.defer();
 

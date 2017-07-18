@@ -2,9 +2,10 @@
 
 const nml = require('node-mod-load')('SHPS4Node-config');
 
+const libs = nml.libs;
 const sym = nml.libs['config-symbols.h'];
 
-nml.libs['config.h'].prototype.getTemplate = function ($type) {
+libs.meth.getTemplate = function ($type) {
 
     const t = {};
     for (let entry of this[sym.templates]) {

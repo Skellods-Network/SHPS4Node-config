@@ -64,7 +64,7 @@ const getSettings = function* ($type, $offsetGroup, $offsetSetting) {
 };
 
 
-libs['config.h'].prototype.genConfig = function($type, $fileName, $onValue, $offsetGroup, $offsetSetting) {
+libs.meth.genConfig = function($type, $fileName, $onValue, $offsetGroup, $offsetSetting) {
 
     const d = defer();
     const conf = {
