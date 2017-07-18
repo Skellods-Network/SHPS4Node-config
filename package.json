@@ -24,7 +24,6 @@
     "semver":"^5.1.0",
     "mics": "^0.7.0",
     "rustify-js": "^0.1.1",
-    "SHPS4Node": "^5.0.0",
     "SHPS4Node-commandline": "^2.0.0"
   }
 }
