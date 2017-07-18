@@ -13,6 +13,8 @@ module.exports = mix(mixins.base, mixins.init, superclass => class Config extend
      */
     constructor() { super(); meth._init.call(this); };
 
+    static init() { return meth.init(); }
+
     /**
      * Generate a config file from a template
      *
