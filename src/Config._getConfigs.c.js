@@ -2,7 +2,7 @@
 
 const nml = require('node-mod-load')('SHPS4Node-config');
 
-const libs = nml('SHPS4Node-config').libs;
+const libs = nml.libs;
 const sym = nml.libs['config-symbols.h'];
 
 libs.meth._getConfigs = function () {
