@@ -84,6 +84,8 @@ module.exports = mix(mixins.base, mixins.init, superclass => class Config extend
      * Drop all loaded templates and read all template files at a path
      *
      * @param {string} $path
+     * @result {Promise<{success:Array<string>, Error>,error:Array<{name:string,error:Error}>}
+     *   On success, returns the names of all loaded templates (divided into success and error
      */
     loadTemplates($path) { throw new Error('Not implemented: Config.loadTemplates'); };
 });

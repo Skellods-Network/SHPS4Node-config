@@ -1,19 +1,12 @@
 ﻿'use strict';
 
 const nml = require('node-mod-load')('SHPS4Node-config');
-const sym = nml.libs['config-symbols.h'];
 
+const sym = nml.libs['config-sym.h'];
 
-nml.libs['config.h'].prototype._init = function ($libs) {
-
-    this._libs = $libs;
-
+nml.libs.meth._init = function () {
+    this[sym.configs] = new Map();
     this[sym.templates] = new Map();
 
-    this[sym.cfg.master] = {};
-    this[sym.cfg.vhosts] = new Map();
-
-    this[sym.template.database] = {};
-    this[sym.template.vhost] = {};
-    this[sym.template.master] = {};
+    Object.assign(this, nml.libs.meth);
 };
