@@ -36,7 +36,7 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
         const numFiles = $files.length;
         let warn = false;
         $files.forEach(($file, $i) => {
-            task.interim(task.result.ok(`Found file "${$file}"`));
+            task.interim(task.result.ok, `Found file "${$file}"`);
             fs.readFile(path.join($path, $file), {}, ($err, $data) => {
                 if ($err) {
                     task.interim(task.result.error, `${$file}: ${$err.message}`);
