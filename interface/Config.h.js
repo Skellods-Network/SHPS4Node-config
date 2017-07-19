@@ -3,7 +3,7 @@
 const mix = require('mics').mix;
 const nml = require('node-mod-load');
 
-const meth = nml('SHPS4Node-plugin').libs.meth;
+const meth = nml('SHPS4Node-config').libs.meth;
 const mixins = nml('SHPS4Node').libs.main.mixins;
 
 module.exports = mix(mixins.base, mixins.init, superclass => class Config extends superclass {
