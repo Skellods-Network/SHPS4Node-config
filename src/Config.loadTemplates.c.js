@@ -56,7 +56,7 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                     SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template signature' });
 
                     // for now, all templates of v5 or later are compatible
-                    if (SHPSVERSION_MA < 5) {
+                    if (t.configHeader.SHPSVERSION_MA < 5) {
                         task.interim(task.result.error, `Template incompatible: "${t.configHeader.name}" `+
                             `@v${t.configHeader.SHPSVERSION_MA}.${t.configHeader.SHPSVERSION_MI}`);
 
