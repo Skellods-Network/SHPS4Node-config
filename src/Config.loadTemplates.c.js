@@ -18,6 +18,7 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
 
     const d = defer();
     const task = SHPS.coml.startTask('Load templates');
+    const templates = this[sym.templates];
 
     templates.clear();
     fs.readdir($path, { encoding: 'utf8' }, ($err, $files) => {
