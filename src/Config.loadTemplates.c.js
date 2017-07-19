@@ -53,9 +53,9 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                     const t = JSON.parse($data);
 
                     // todo: check signature
-                    main.writeLog(main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template signature' });
+                    SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template signature' });
                     // todo: check if compatible with this version of SHPS
-                    main.writeLog(main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template compatibility' });
+                    SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template compatibility' });
 
                     task.interim(task.result.ok, `Loaded template "${t.configHeader.name}"`);
                     templates.set(t.configHeader.name, t);
