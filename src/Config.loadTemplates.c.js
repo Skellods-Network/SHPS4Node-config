@@ -7,6 +7,7 @@ const path = require('path');
 
 const libs = nml('SHPS4Node-config').libs;
 const SHPS = nml('SHPS4Node').libs;
+const sym = libs['Config-sym.h'];
 
 /**
  * @type {Map}
