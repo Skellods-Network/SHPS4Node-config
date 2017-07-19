@@ -2,7 +2,7 @@
 
 const nml = require('node-mod-load')('SHPS4Node-config');
 
-const sym = nml.libs['config-sym.h'];
+const sym = nml.libs['Config-sym.h'];
 
 nml.libs.meth._init = function () {
     this[sym.configs] = new Map();
