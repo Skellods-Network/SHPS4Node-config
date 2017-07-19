@@ -17,7 +17,7 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
     SHPS.main.writeLog(SHPS.main.logLevels.trace, { mod: 'CONFIG', msg: `loadTemplates(${$path})`});
 
     const d = defer();
-    const task = SHPS.coml.getTask('Load templates');
+    const task = SHPS.coml.startTask('Load templates');
 
     templates.clear();
     fs.readdir($path, { encoding: 'utf8' }, ($err, $files) => {
