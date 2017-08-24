@@ -2,9 +2,9 @@
 
 const fs = require('fs');
 const nml = require('node-mod-load');
-const Option = require('rusty-js').Option;
+const Option = require('rustify-js').Option;
 const path = require('path');
-const Result = require('rusty-js').Result;
+const Result = require('rustify-js').Result;
 
 const SHPS = nml('SHPS4Node').libs;
 
