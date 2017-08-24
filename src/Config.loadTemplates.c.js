@@ -21,6 +21,17 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
     const task = SHPS.coml.startTask('Load templates');
     const templates = this[sym.templates];
 
+    const silent = (() => {
+        if (typeof $silent === 'undefined') {
+            return SHPS._options.prod
+                ? SHPS._options.prod
+                : false
+            ;
+        }
+
+        return !!$silent;
+    })();
+
     templates.clear();
     fs.readdir($path, { encoding: 'utf8' }, ($err, $files) => {
         if ($err) {
@@ -36,14 +47,19 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
         const numFiles = $files.length;
         let warn = false;
         $files.forEach(($file, $i) => {
+            if (path.extname($file) !== '.json') {
+                return;
+            }
+
             task.interim(task.result.ok, `Found file "${$file}"`);
             fs.readFile(path.join($path, $file), {}, ($err, $data) => {
                 if ($err) {
                     task.interim(task.result.error, `${$file}: ${$err.message}`);
                     r.error.push({ name: $file, error: $err });
                     warn = true;
-                    if ($i - 1 >= numFiles) {
+                    if ($i + 1 >= numFiles) {
                         task.end(task.result.warning);
+                        d.resolve(r);
                     }
 
                     return;
@@ -57,13 +73,18 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
 
                     // for now, all templates of v5 or later are compatible
                     if (t.configHeader.SHPSVERSION_MA < 5) {
-                        task.interim(task.result.error, `Template incompatible: "${t.configHeader.name}" `+
-                            `@v${t.configHeader.SHPSVERSION_MA}.${t.configHeader.SHPSVERSION_MI}`);
+                        const upgradeResult = this.upgradeTemplate(path.join($path, $file), t);
+                        if (upgradeResult.isOk()) {
+                            task.interim(task.result.ok, upgradeResult.unwrap());
+                        }
+                        else {
+                            task.interim(task.result.error, upgradeResult.unwrapErr());
+                            task.interim(task.result.error, `Template incompatible: "${$file}" ` +
+                                `@v${t.configHeader.SHPSVERSION_MA}.${t.configHeader.SHPSVERSION_MI}`);
 
-                        return;
+                            return;
+                        }
                     }
-
-                    SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template compatibility' });
 
                     task.interim(task.result.ok, `Loaded template "${t.configHeader.name}"`);
                     templates.set(t.configHeader.name, t);
@@ -75,8 +96,9 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                     r.error.push({ name: $file, error: $err });
                 }
 
-                if ($i - 1 >= numFiles) {
+                if ($i + 1 >= numFiles) {
                     task.end(warn ? task.result.warning : task.result.ok);
+                    d.resolve(r);
                 }
             });
         });

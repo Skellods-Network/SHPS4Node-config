@@ -1,29 +1,29 @@
-{  
-  "name":"SHPS4Node-config",
-  "version":"2.0.0",
-  "description":"Config module of SHPS4Node",
-  "main":"index-config.js",
-  "homepage":"https://shps.io",
-  "author":{
-    "name":"Marco Alka",
-    "email":"me@marco-alka.de",
-    "url":"https://marco-alka.de"
+{
+  "name": "SHPS4Node-config",
+  "version": "2.0.0",
+  "description": "Config module of SHPS4Node",
+  "main": "index-config.js",
+  "homepage": "https://shps.io",
+  "author": {
+    "name": "Marco Alka",
+    "email": "me@marco-alka.de",
+    "url": "https://marco-alka.de"
   },
-  "repository":{  
-    "type":"git",
-    "url":"https://github.com/Skellods-Network/SHPS4Node-config.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Skellods-Network/SHPS4Node-config.git"
   },
-  "engines":{  
-    "node":">=4.0.0",
-    "npm":">=2.5.0"
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=2.5.0"
   },
-  "dependencies":{
-    "vasync":"^1.6.0",
-    "node-mod-load":"^3.2.0",
-    "promise-defer":"^1.0.0",
-    "semver":"^5.1.0",
+  "dependencies": {
+    "SHPS4Node-commandline": "^2.0.0",
     "mics": "^0.7.0",
+    "node-mod-load": "^3.2.2",
+    "promise-defer": "^1.0.0",
     "rustify-js": "^0.1.1",
-    "SHPS4Node-commandline": "^2.0.0"
+    "semver": "^5.1.0",
+    "vasync": "^1.6.0"
   }
 }
