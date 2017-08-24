@@ -6,6 +6,7 @@ const Option = require('rustify-js').Option;
 const path = require('path');
 const Result = require('rustify-js').Result;
 
+const libs = nml('SHPS4Node-config').libs;
 const SHPS = nml('SHPS4Node').libs;
 
 
