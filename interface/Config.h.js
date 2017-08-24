@@ -2,7 +2,7 @@
 
 const mix = require('mics').mix;
 const nml = require('node-mod-load');
-const Option = require('rusty-js').Option;
+const Option = require('rustify-js').Option;
 
 const meth = nml('SHPS4Node-config').libs.meth;
 const mixins = nml('SHPS4Node').libs.main.mixins;
