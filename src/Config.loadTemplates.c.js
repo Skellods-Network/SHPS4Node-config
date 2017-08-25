@@ -10,8 +10,6 @@ const SHPS = nml('SHPS4Node').libs;
 const sym = libs['Config-sym.h'];
 
 libs.meth.loadTemplates = function configloadTemplates($path) {
-    SHPS.main.writeLog(SHPS.main.logLevels.trace, { mod: 'CONFIG', msg: `loadTemplates(${$path})`});
-
     const d = defer();
     const task = SHPS.coml.startTask('Load templates');
     const templates = this[sym.templates];
@@ -111,6 +109,5 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
         });
     });
 
-    SHPS.main.writeLog(SHPS.main.logLevels.trace, { mod: 'CONFIG', msg: `\\\\ loadTemplates(${$path})`});
     return d.promise;
 };
