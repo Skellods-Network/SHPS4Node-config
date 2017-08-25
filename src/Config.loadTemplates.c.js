@@ -75,6 +75,8 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                     // todo: check signature
                     SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template signature' });
 
+                    let upgradeSuccessful = true;
+
                     // for now, all templates of v5 or later are compatible
                     if (versionMajor < 5) {
                         const upgradeResult = this.upgradeTemplate(path.join($path, $file), Some(t));
@@ -92,16 +94,21 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                             task.interim(task.result.error, `Template incompatible: "${$file}" ` +
                                 `@v${versionMajor}.${versionMinor}`);
 
-                            return;
+                            upgradeSuccessful = false;
                         }
                     }
 
-                    // todo: check if template name has already been registered
-                    SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check if template name already exists' });
+                    if (upgradeSuccessful) {
+                        // todo: check if template name has already been registered
+                        SHPS.main.writeLog(SHPS.main.logLevels.warning, {
+                            mod: 'CONFIG',
+                            msg: 'fixme: check if template name already exists'
+                        });
 
-                    task.interim(task.result.ok, `Loaded template "${t.configHeader.name}"`);
-                    templates.set(t.configHeader.name, t);
-                    r.success.push(t.configHeader.name);
+                        task.interim(task.result.ok, `Loaded template "${t.configHeader.name}"`);
+                        templates.set(t.configHeader.name, t);
+                        r.success.push(t.configHeader.name);
+                    }
                 }
                 catch ($err) {
                     warn = true;
