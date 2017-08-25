@@ -9,11 +9,6 @@ const libs = nml('SHPS4Node-config').libs;
 const SHPS = nml('SHPS4Node').libs;
 const sym = libs['Config-sym.h'];
 
-/**
- * @type {Map}
- */
-const templates = libs['Config-sym.h'].templates;
-
 libs.meth.loadTemplates = function configloadTemplates($path) {
     SHPS.main.writeLog(SHPS.main.logLevels.trace, { mod: 'CONFIG', msg: `loadTemplates(${$path})`});
 
@@ -94,6 +89,9 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                             return;
                         }
                     }
+
+                    // todo: check if template name has already been registered
+                    SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check if template name already exists' });
 
                     task.interim(task.result.ok, `Loaded template "${t.configHeader.name}"`);
                     templates.set(t.configHeader.name, t);

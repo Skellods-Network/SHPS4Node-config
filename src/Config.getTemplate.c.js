@@ -5,31 +5,16 @@ const nml = require('node-mod-load')('SHPS4Node-config');
 const libs = nml.libs;
 const sym = nml.libs['config-symbols.h'];
 
-libs.meth.getTemplate = function ($type) {
+libs.meth.getTemplate = function ($name) {
+    const name = $name.toString();
+    /**
+     * @type {Map}
+     */
+    const templates = this[sym.templates];
 
-    const t = {};
-    for (let entry of this[sym.templates]) {
-
-        t[entry[0]] = entry[1];
+    if (templates.has(name)) {
+        return Some(templates.get(name));
     }
 
-    const templates = Object.assign({}, this[sym.template], t);
-
-    if (!templates[$type.toString()]) {
-
-        throw new Error(`Template of type "${$type.toString()}" not available!`);
-    }
-
-    if (templates[$type.toString()] instanceof Map) {
-
-        let r = {};
-        for (let entry of templates[$type.toString()]) {
-
-            r[entry[0]] = entry[1];
-        }
-
-        return r;
-    }
-
-    return templates[$type.toString()];
+    return None();
 };

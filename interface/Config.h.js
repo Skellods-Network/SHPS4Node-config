@@ -2,7 +2,6 @@
 
 const mix = require('mics').mix;
 const nml = require('node-mod-load');
-const Option = require('rustify-js').Option;
 
 const meth = nml('SHPS4Node-config').libs.meth;
 const mixins = nml('SHPS4Node').libs.main.mixins;
@@ -62,9 +61,8 @@ module.exports = mix(mixins.base, mixins.init, superclass => class Config extend
     /**
      * Get a certain template by name
      *
-     * @throws when template not available
      * @param name string Name of template type
-     * @return {object}
+     * @return {Option<object>}
      */
     getTemplate(name) { throw new Error('Not implemented: Config.getTemplate!'); };
 
@@ -102,7 +100,7 @@ module.exports = mix(mixins.base, mixins.init, superclass => class Config extend
      * Try to upgrade a template to the most current version
      *
      * @param {string} path
-     * @param {Option} obj
+     * @param {Option<object>} obj
      */
-    upgradeTemplate(path, obj = Option.None())  { throw new Error('Not implemented: Config.upgradeTemplate'); };
+    upgradeTemplate(path, obj = None())  { throw new Error('Not implemented: Config.upgradeTemplate'); };
 });
