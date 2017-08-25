@@ -46,18 +46,27 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
 
         const numFiles = $files.length;
         let warn = false;
-        $files.forEach(($file, $i) => {
+        let i = 0;
+        $files.forEach($file => {
             if (path.extname($file) !== '.json') {
+                i++;
+                if (i >= numFiles) {
+                    task.end(warn ? task.result.warning : task.result.ok);
+                    d.resolve(r);
+                }
+
                 return;
             }
 
             task.interim(task.result.ok, `Found file "${$file}"`);
             fs.readFile(path.join($path, $file), {}, ($err, $data) => {
+                i++;
+
                 if ($err) {
                     task.interim(task.result.error, `${$file}: ${$err.message}`);
                     r.error.push({ name: $file, error: $err });
                     warn = true;
-                    if ($i + 1 >= numFiles) {
+                    if (i >= numFiles) {
                         task.end(task.result.warning);
                         d.resolve(r);
                     }
@@ -73,7 +82,7 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
 
                     // for now, all templates of v5 or later are compatible
                     if (t.configHeader.SHPSVERSION_MA < 5) {
-                        const upgradeResult = this.upgradeTemplate(path.join($path, $file), t);
+                        const upgradeResult = this.upgradeTemplate(path.join($path, $file), Some(t));
                         if (upgradeResult.isOk()) {
                             task.interim(task.result.ok, upgradeResult.unwrap());
                         }
@@ -96,7 +105,7 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
                     r.error.push({ name: $file, error: $err });
                 }
 
-                if ($i + 1 >= numFiles) {
+                if (i >= numFiles) {
                     task.end(warn ? task.result.warning : task.result.ok);
                     d.resolve(r);
                 }
