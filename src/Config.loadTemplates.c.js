@@ -69,20 +69,28 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
 
                 try {
                     const t = JSON.parse($data);
+                    const versionMajor = t.configHeader.SHPSVERSION_MA;
+                    const versionMinor = t.configHeader.SHPSVERSION_MI;
 
                     // todo: check signature
                     SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: check template signature' });
 
                     // for now, all templates of v5 or later are compatible
-                    if (t.configHeader.SHPSVERSION_MA < 5) {
+                    if (versionMajor < 5) {
                         const upgradeResult = this.upgradeTemplate(path.join($path, $file), Some(t));
                         if (upgradeResult.isOk()) {
                             task.interim(task.result.ok, upgradeResult.unwrap());
                         }
                         else {
-                            task.interim(task.result.error, upgradeResult.unwrapErr());
+                            const errMsg = upgradeResult.unwrapErr();
+                            task.interim(task.result.error, `Template cannot be upgraded: ${errMsg}`);
+                            SHPS.main.writeLog(SHPS.main.logLevels.error, {
+                                mod: 'CONFIG',
+                                msg: `Cannot upgrade template "${$file}"@v${versionMajor}.${versionMinor}: ${errMsg}`
+                            });
+
                             task.interim(task.result.error, `Template incompatible: "${$file}" ` +
-                                `@v${t.configHeader.SHPSVERSION_MA}.${t.configHeader.SHPSVERSION_MI}`);
+                                `@v${versionMajor}.${versionMinor}`);
 
                             return;
                         }
