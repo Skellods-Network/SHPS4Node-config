@@ -1,0 +1,12 @@
+{
+  "configHeader": {
+    "name": "Sample",
+    "description": "Sample",
+    "SHPSVERSION_MA": 5,
+    "SHPSVERSION_MI": 0,
+    "type": "template"
+  },
+  "template": {
+    "foo": "bar"
+  }
+}

@@ -25,5 +25,11 @@
     "rustify-js": "^0.1.1",
     "semver": "^5.1.0",
     "vasync": "^1.6.0"
+  },
+  "devDependencies": {
+    "tap": "^10.7.2"
+  },
+  "scripts": {
+    "test": "tap test.js --coverage --coverage-report=lcov"
   }
 }

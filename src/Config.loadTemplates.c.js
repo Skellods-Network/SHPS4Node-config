@@ -6,24 +6,87 @@ const nml = require('node-mod-load');
 const path = require('path');
 
 const libs = nml('SHPS4Node-config').libs;
-const SHPS = nml('SHPS4Node').libs;
 const sym = libs['Config-sym.h'];
+
+
+libs.meth.loadTemplates = function configloadTemplates($path, {
+    fileFoundHandler = () => {},
+    fileLoadedHandler = () => {},
+    errorHandler = () => {},
+} = {}) {
+    const d = defer();
+    //const task = SHPS.coml.startTask('Load templates');
+    /**
+     * @type {Map.<String, object>}
+     */
+    const templates = this[sym.templates];
+
+    templates.clear();
+    this
+        ._loadFiles($path.toString(), async ($path, $fileName) => {
+            //task.interim(task.result.ok, `Found file "${$fileName}"`);
+            fileFoundHandler($fileName);
+            let data = await new Promise(($res, $rej) => {
+                fs.readFile($path, {}, ($err, $data) => {
+                    if ($err) {
+                        task.interim(task.result.error, `${$fileName}: ${$err.message}`);
+                        $rej($err);
+                        return;
+                    }
+
+                    $res($data);
+                });
+            });
+
+            // no error catching required - will propagate automatically (magically?)
+            data = JSON.parse(data);
+
+            // todo: check signature
+            //SHPS.main.writeLog(SHPS.main.logLevels.warning, {
+            //    mod: 'CONFIG',
+            //    msg: 'fixme: check template signature'
+            //});
+            // await this._checkTemplateSignature(data);
+
+            // check version and upgrade if necessary
+            const versionMajor = data.configHeader.SHPSVERSION_MA;
+
+            // for now, all templates of v5 or later are compatible
+            if (versionMajor < 5) {
+                await this.upgradeTemplate(path.join($path, $fileName), Some(data));
+            }
+
+            // todo: check if template name has already been registered
+            //SHPS.main.writeLog(SHPS.main.logLevels.warning, {
+            //    mod: 'CONFIG',
+            //    msg: 'fixme: check if template name already exists'
+            //});
+
+            // store template
+            //task.interim(task.result.ok, `Loaded template "${t.configHeader.name}"`);
+            fileLoadedHandler(data.configHeader.name);
+            templates.set(data.configHeader.name, data);
+
+            return data;
+        }, ($fileName, $err) => {
+            //task.interim(task.result.error, `${$fileName}: ${$err.message}`);
+            errorHandler($fileName, $err);
+        })
+        .then(d.resolve)
+        .catch(d.reject);
+
+    return d.promise;
+};
+
+
+
+/*
+
 
 libs.meth.loadTemplates = function configloadTemplates($path) {
     const d = defer();
     const task = SHPS.coml.startTask('Load templates');
     const templates = this[sym.templates];
-
-    const silent = (() => {
-        if (typeof $silent === 'undefined') {
-            return SHPS._options.prod
-                ? SHPS._options.prod
-                : false
-            ;
-        }
-
-        return !!$silent;
-    })();
 
     templates.clear();
     fs.readdir($path, { encoding: 'utf8' }, ($err, $files) => {
@@ -126,3 +189,4 @@ libs.meth.loadTemplates = function configloadTemplates($path) {
 
     return d.promise;
 };
+*/

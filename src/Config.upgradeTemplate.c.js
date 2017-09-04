@@ -11,6 +11,11 @@ const SHPS = nml('SHPS4Node').libs;
 
 
 libs.meth.upgradeTemplate = function upgradeTemplate($path, $obj = Option.None()) {
+    const fileName = path.basename($path);
+    const versionMajor = '?';
+    const versionMinor = '?';
+    const errMsg = 'Not implemented';
+
     SHPS.main.writeLog(SHPS.main.logLevels.warning, { mod: 'CONFIG', msg: 'fixme: upgradeTemplate() not implemented' });
-    return Result.fromError('Not implemented');
+    return Promise.reject(new Error (`Cannot upgrade template "${fileName}"@v${versionMajor}.${versionMinor}: ${errMsg}`));
 };
