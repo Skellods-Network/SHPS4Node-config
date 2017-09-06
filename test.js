@@ -76,7 +76,7 @@ TAP.test('Create Config Object', $t => {
 });
 
 TAP.test('Read Template', $t => {
-    $t.plan(2);
+    $t.plan(3);
 
     /**
      * @type {Config}
@@ -87,7 +87,8 @@ TAP.test('Read Template', $t => {
         .loadTemplates('test/templates')
         .then($r => {
             $t.equal($r.length, 1, 'Load Sample Template');
-            $t.equal($r[0].template.foo, 'bar', 'Load Sample Template Content');
+            $t.equal($r[0].template.foo.default, -1, 'Load Sample Template Content');
+            $t.ok(config.getTemplate('sample'), 'Found template');
             $t.end();
         })
         .catch($t.fail)

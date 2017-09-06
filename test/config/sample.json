@@ -1,0 +1,11 @@
+{
+  "configHeader": {
+    "description": "Sample config",
+    "SHPSVERSION_MA": 5,
+    "SHPSVERSION_MI": 0,
+    "type": "sample"
+  },
+  "config": {
+    "foo": 42
+  }
+}

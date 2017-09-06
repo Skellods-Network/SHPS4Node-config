@@ -1,12 +1,16 @@
 {
   "configHeader": {
-    "name": "Sample",
+    "name": "sample",
     "description": "Sample",
     "SHPSVERSION_MA": 5,
     "SHPSVERSION_MI": 0,
     "type": "template"
   },
   "template": {
-    "foo": "bar"
+    "foo": {
+      "description": "For testing purposes",
+      "type": "number",
+      "default": -1
+    }
   }
 }
